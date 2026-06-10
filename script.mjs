@@ -18,7 +18,7 @@ function setup() {
 
 function render(currentUserId) {
   if (!users.includes(currentUserId)) return;
-  const questionsAll = computeAnswers();
+  const questionsAll = computeAnswers(currentUserId);
   displayQuestions(questionsAll);
 }
 
@@ -53,7 +53,15 @@ function createQuestion(item) {
 // ----- Back End
 // ======================================================
 
-export function computeAnswers() {
+export function computeAnswers(userId) {
+  const listenEvents = getListenEvents(userId);
+  if (!listenEvents || listenEvents.length === 0)
+    return [{ answer: "This user didn't listen to any songs." }];
+
+  const questionsAll = [];
+
+  console.log(listenEvents);
+
   return [
     { question: "question 1?", answer: "answer 1" },
     { question: "question 2?", answer: "answer 2" },
