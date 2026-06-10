@@ -59,7 +59,7 @@ export function computeAnswers(userId) {
     return [{ answer: "This user didn't listen to any songs." }];
 
   const questionsAll = [];
-  console.log(tallySongs(listenEvents));
+  console.log(tallyData(listenEvents, "song_id"));
 
   return [
     { question: "question 1?", answer: "answer 1" },
@@ -68,13 +68,12 @@ export function computeAnswers(userId) {
   ];
 }
 
-function tallySongs(songs) {
-  const songTally = songs.reduce((tally, event) => {
-    const id = event.song_id;
-    tally[id] = (tally[id] || 0) + 1;
+function tallyData(data, key) {
+  return data.reduce((tally, event) => {
+    const item = event[key];
+    tally[item] = (tally[item] || 0) + 1;
     return tally;
   }, {});
-  return songTally;
 }
 
 // ======================================================
