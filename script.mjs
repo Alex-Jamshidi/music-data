@@ -59,21 +59,76 @@ export function computeAnswers(userId) {
     return [{ answer: "This user didn't listen to any songs." }];
 
   const questionsAll = [];
-  console.log(tallyData(listenEvents, "song_id"));
+  questionsAll.push(mostListenedSongCount(listenEvents));
+  questionsAll.push(mostListenedSongTime(listenEvents));
 
-  return [
-    { question: "question 1?", answer: "answer 1" },
-    { question: "question 2?", answer: "answer 2" },
-    { answer: "answer without question" },
-  ];
+  return questionsAll;
 }
 
-function tallyData(data, key) {
-  return data.reduce((tally, event) => {
+function tallyData(objects, key) {
+  return objects.reduce((tally, event) => {
     const item = event[key];
     tally[item] = (tally[item] || 0) + 1;
     return tally;
   }, {});
+}
+
+function getHighestKey(tallyObject) {
+  let highestKey = "";
+  let highestValue = -Infinity;
+
+  for (const [key, value] of Object.entries(tallyObject)) {
+    if (value > highestValue) {
+      highestValue = value;
+      highestKey = key;
+    }
+  }
+
+  return highestKey;
+}
+
+function addData(listenEvents, key) {
+  return listenEvents.map((event) => {
+    const song = getSong(event.song_id);
+    return {
+      ...event,
+      [key]: song ? song[key] : "Unknown",
+    };
+  });
+}
+
+function mostListenedSongCount(songs) {
+  const mostListenedTally = tallyData(songs, "song_id");
+  const mostListenedSongId = getHighestKey(mostListenedTally);
+  const mostListenedSong = getSong(mostListenedSongId);
+
+  return {
+    question: `Most listened song (count)`,
+    answer: `${mostListenedSong.title}`,
+  };
+}
+
+function mostListenedSongTime(songs) {
+  const mostListenedTally = tallyData(songs, "song_id");
+
+  const mostListenedTallyTime = Object.entries(mostListenedTally).reduce(
+    (timeTally, [songId, playCount]) => {
+      const songDetails = getSong(songId);
+      const duration = songDetails ? songDetails.duration_seconds : 0;
+
+      timeTally[songId] = playCount * duration;
+      return timeTally;
+    },
+    {},
+  );
+
+  const mostListenedSongId = getHighestKey(mostListenedTallyTime);
+  const mostListenedSong = getSong(mostListenedSongId);
+
+  return {
+    question: `Most listened song (time)`,
+    answer: `${mostListenedSong.title}`,
+  };
 }
 
 // ======================================================
