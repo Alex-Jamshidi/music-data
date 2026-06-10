@@ -10,18 +10,16 @@ const questionContainer = document.getElementById("question-container");
 // ----- Setup and Render
 // ======================================================
 const users = getUserIDs();
-let currentUserId;
-let questionsAll;
 
 function setup() {
   userSelect.value = "";
-  render();
+  render("no user");
 }
 
-function render() {
+function render(currentUserId) {
   if (!users.includes(currentUserId)) return;
-  computeAnswers();
-  displayQuestions();
+  const questionsAll = computeAnswers();
+  displayQuestions(questionsAll);
 }
 
 // ======================================================
@@ -30,12 +28,12 @@ function render() {
 
 // Checks for change of user
 userSelect.addEventListener("change", function (option) {
-  currentUserId = userSelect.value;
-  render();
+  const currentUserId = userSelect.value;
+  render(currentUserId);
 });
 
 // Creates and display all questions/answers
-export function displayQuestions() {
+export function displayQuestions(questionsAll) {
   const questionElements = questionsAll.map(createQuestion);
   questionContainer.replaceChildren(...questionElements);
 }
@@ -56,12 +54,11 @@ function createQuestion(item) {
 // ======================================================
 
 export function computeAnswers() {
-  questionsAll = [
+  return [
     { question: "question 1?", answer: "answer 1" },
     { question: "question 2?", answer: "answer 2" },
     { answer: "answer without question" },
   ];
-  return;
 }
 
 // ======================================================
