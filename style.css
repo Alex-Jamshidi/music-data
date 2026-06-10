@@ -1,3 +1,13 @@
 .question-item {
 font-weight: bold;
 }
+
+.question-item {
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+
+.answer-item {
+    margin-top: 0;
+    margin-bottom: 24px;
+}
