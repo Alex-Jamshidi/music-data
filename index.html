@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Data</title>
+</head>
+
+<body>
+
+  <main>
+    <header>
+      <h1>Music Data</h1>
+    </header>
+
+    <section>
+      <div>
+        <label for="user-select">Choose User:</label>
+        <select id="user-select">
+          <option value="" disabled selected>Select a User</option>
+          <option value="1">User 1</option>
+          <option value="2">User 2</option>
+          <option value="3">User 3</option>
+          <option value="4">User 4</option>
+        </select>
+      </div>
+    </section>
+
+    <template id="questions-template">
+      <p class="question"></p>
+    </template>
+
+  </main>       
+    <script type="module" src="script.mjs"></script>       
+</body>
+</html>
