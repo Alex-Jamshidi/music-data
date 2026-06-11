@@ -78,6 +78,9 @@ export function computeAnswers(userId) {
 
   questionsAll.push(longestStreakSong(listenEvents));
 
+  const everyDay = listenedEveryDay(listenEvents);
+  if (everyDay) questionsAll.push(everyDay);
+
   return questionsAll;
 }
 
@@ -239,6 +242,38 @@ function longestStreakSong(songs) {
   return {
     question: "Longest streak song",
     answer: `${bestSong.title} - ${bestSong.artist} (${bestCount} times)`,
+  };
+}
+
+function listenedEveryDay(songs) {
+  const allDays = new Set(
+    songs.map((event) => new Date(event.timestamp).toDateString()),
+  );
+
+  const songsByDay = songs.reduce((acc, event) => {
+    const day = new Date(event.timestamp).toDateString();
+    if (!acc[day]) acc[day] = new Set();
+    acc[day].add(event.song_id);
+    return acc;
+  }, {});
+
+  const allSongIds = [...new Set(songs.map((e) => e.song_id))];
+  const everyDaySongs = allSongIds.filter((songId) =>
+    [...allDays].every((day) => songsByDay[day].has(songId)),
+  );
+
+  if (everyDaySongs.length === 0) return null;
+
+  const titles = everyDaySongs
+    .map((id) => {
+      const song = getSong(id);
+      return `${song.title} - ${song.artist}`;
+    })
+    .join(", ");
+
+  return {
+    question: `Listened to every day`,
+    answer: titles,
   };
 }
 
