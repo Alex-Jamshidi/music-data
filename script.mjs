@@ -33,7 +33,7 @@ userSelect.addEventListener("change", function (option) {
 });
 
 // Creates and display all questions/answers
-export function displayQuestions(questionsAll) {
+function displayQuestions(questionsAll) {
   const questionElements = questionsAll.map(createQuestion);
   questionContainer.replaceChildren(...questionElements);
 }
@@ -53,7 +53,7 @@ function createQuestion(item) {
 // ----- Back End
 // ======================================================
 
-export function computeAnswers(userId) {
+function computeAnswers(userId) {
   const listenEvents = getListenEvents(userId);
   if (!listenEvents || listenEvents.length === 0)
     return [{ answer: "This user didn't listen to any songs." }];
@@ -80,6 +80,9 @@ export function computeAnswers(userId) {
 
   const everyDay = listenedEveryDay(listenEvents);
   if (everyDay) questionsAll.push(everyDay);
+
+  const genres = topGenres(listenEvents);
+  if (genres) questionsAll.push(genres);
 
   return questionsAll;
 }
@@ -274,6 +277,25 @@ function listenedEveryDay(songs) {
   return {
     question: `Listened to every day`,
     answer: titles,
+  };
+}
+
+function topGenres(songs) {
+  const enrichedSongs = addData(songs, "genre");
+  const genreTally = tallyData(enrichedSongs, "genre");
+
+  const sorted = Object.entries(genreTally)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 3);
+
+  if (sorted.length === 0) return null;
+
+  const label =
+    sorted.length === 1 ? "Top genre" : `Top ${sorted.length} genres`;
+
+  return {
+    question: label,
+    answer: sorted.map(([genre]) => genre).join(", "),
   };
 }
 

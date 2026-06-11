@@ -65,3 +65,23 @@ describe("The website must contain a drop-down which lists four users", () => {
     expect(getUserIDs().length).toEqual(4);
   });
 });
+
+describe("Some intelligible statement should be shown to the user if they have no data", () => {
+  it("Shows message when user 4 selected", () => {
+    const questionContainer = document.getElementById("question-container");
+
+    // Reset frontend (clear question container)
+    document.getElementById("question-container").innerHTML = "";
+
+    // Selects User 4
+    const userSelect = document.getElementById("user-select");
+    if (userSelect) {
+      userSelect.value = "4";
+      userSelect.dispatchEvent(new dom.window.Event("change"));
+    }
+
+    expect(questionContainer.textContent).toContain(
+      "This user didn't listen to any songs.",
+    );
+  });
+});
