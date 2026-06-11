@@ -25,7 +25,7 @@
 <br><br>
 
 **The website must score 100 for accessibility in Lighthouse**
-<br>Landing page and all 4 users tested in snapshot with 100 accessibility
+<br>Landing page and all 4 users tested in snapshot with fully passed accessibility
 <br><br>
 
 **Bonus points (which don’t mean anything):**
